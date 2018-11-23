@@ -1,0 +1,290 @@
+$type: card
+rules: []
+properties:
+  title:
+    type: element
+    xtype: at-carbon-card-title
+    title: Outlook Events
+    xgridcols: 12
+    xstyle: 
+    xclass: 
+    actionListeners:
+      - _start
+  content:
+    type: element
+    xtype: at-core-view
+    model: 
+    view: |-
+      <div class="layout-vertical">
+        {% for item in items %}
+        {% if forloop.index > 1 %}
+        	<div class="expanded-only bb"></div>
+        {% endif %}
+        <div class="layout-horizontal mx mbsm mt {% if forloop.index > 1 %}expanded-only{%endif%}">
+        	<div class="layout-vertical layout-start mr">
+        		<div>{{ item.time }}</div>
+          	<div class="bold font-caption">{{ item.date_readable }}</div>
+        	</div>
+        	<div class="layout-flex text-primary">
+        		<div class="font-bold">
+        			{{ item.subject }}<span class="font-caption grey mlsm">{{ item.duration }}</span>
+        		</div>
+          	<div>{{ item.organizer.emailAddress.name }} (host)</div>
+        		<div class="layout-vertical mt mbsm">
+        			<div class="layout-horizontal layout-center layout-justified {%if item.showDetails == true %}mb{% endif %}">
+        				{% if item.onlineMeetingUrl %}
+                <at-carbon-button class="ml0 background-green" button-type="contained" button-color="green" label="Join Meeting" href="{{ item.onlineMeetingUrl }}"></at-carbon-button>
+                {% endif %}
+                {% if item.showDetails == true %}
+                <div class="layout-horizontal layout-end-justified layout-center mrsm" index="{{ forloop.index}} "at-click-action="post1">
+                	<span>Less details {{ today }}</span>
+                  <at-carbon-icon icon="now:caret-up" class="grey icon mlsm"></at-carbon-icon>
+                </div>
+                {% else %}
+                <div class="layout-horizontal layout-end-justified layout-center mrsm" index="{{ forloop.index}}" at-click-action="post1">
+                	<span>More details</span>
+                  <at-carbon-icon icon="now:caret-down" class="grey icon mlsm"></at-carbon-icon>
+                </div>
+               	{% endif %}
+        			</div>
+        			{% if item.showDetails == true %}
+              {% if item.location %}
+              <div class="layout-horizontal layout-center mb">
+                <at-carbon-icon icon="now:marker" class="mrsm" style="width:16px;height:16px;"></at-carbon-icon>
+                <at-link href="{{ item.location.link }}" class="blue">{{ item.location.displayName }}</at-link>
+              </div>
+              {% endif %}
+              <div class="mb">Attendees ({{ item.attendees.length }})</div>
+              <at-carbon-clamp lines="4" class="mb mr">{{ item.bodyPreview }}</at-carbon-clamp>
+              {% if item.responseRequested and item.responseStatus.response != "organizer" %}
+              <div class="layout-horizontal layout-center mb">
+              	{% if item.responseStatus.response != "accepted" %}
+                <at-carbon-icon icon="now:cancel" class="red mrsm" style="width:16px;height:16px;"></at-carbon-icon>
+                <span>Not Accepted</span>
+                {% else %}
+                <at-carbon-icon icon="now:checkmark" class="green mrsm" style="width:16px;height:16px;"></at-carbon-icon>
+                <span>Accepted&nbsp;</span>
+        				<at-carbon-moment datetime="{{ item.responseStatus.time }}" from-now></at-carbon-moment>
+              	{% endif %}
+        			</div>
+              {% endif %}
+              <at-link href="{{ item.webLink }}" class="blue">View Meeting in Calendar</at-link>
+        			{% endif %}
+        		</div>
+        	</div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <style>
+      .icon {
+       	width: 12px;
+        height: 12px;
+      }
+      </style>
+    xgridcols: 12
+    xstyle: 
+    xclass: 
+    actionListeners:
+      - _all
+    default: 
+    modelRoot: state.model
+  footer4:
+    type: element
+    title: View Calendar
+    xtype: at-carbon-card-footer
+    xgridcols: 12
+    expandable: !!bool true
+    href: http://localhost
+$meta:
+  cardId: !!int 63
+  preview-data: |-
+    {
+      "items": [
+        {
+          "@odata.etag": "W/\"IbXQQXRjrEGHveA90TX5AQADnj+owg==\"",
+          "id": "AAMkADJlMTQ1MjAwLTcyMWItNDkzYS1iYzYyLWYyM2M5ZmNiZDYyMwBGAAAAAACVawIxJltTS5JfPy1OVLjdBwAhtdBBdGOsQYe94D3RNfkBAAAAAAENAAAhtdBBdGOsQYe94D3RNfkBAAOco2J7AAA=",
+          "createdDateTime": "2018-11-20T11:19:40.4508388Z",
+          "lastModifiedDateTime": "2018-11-23T07:51:42.7315245Z",
+          "reminderMinutesBeforeStart": 15,
+          "isReminderOn": true,
+          "subject": "MSGraph Connector Meeting",
+          "bodyPreview": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+          "isCancelled": false,
+          "responseRequested": true,
+          "webLink": "https://outlook.office365.com/owa/?itemid=AAMkADJlMTQ1MjAwLTcyMWItNDkzYS1iYzYyLWYyM2M5ZmNiZDYyMwBGAAAAAACVawIxJltTS5JfPy1OVLjdBwAhtdBBdGOsQYe94D3RNfkBAAAAAAENAAAhtdBBdGOsQYe94D3RNfkBAAOco2J7AAA%3D&exvsurl=1&path=/calendar/item",
+          "onlineMeetingUrl": null,
+          "responseStatus": {
+            "response": "organizer",
+            "time": "0001-01-01T00:00:00Z"
+          },
+          "body": {
+            "contentType": "html",
+            "content": "<html>\r\n<head>\r\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\r\n<meta content=\"text/html; charset=us-ascii\">\r\n<style type=\"text/css\" style=\"display:none\">\r\n<!--\r\np\r\n\t{margin-top:0;\r\n\tmargin-bottom:0}\r\n-->\r\n</style>\r\n</head>\r\n<body dir=\"ltr\">\r\n<div id=\"divtagdefaultwrapper\" dir=\"ltr\" style=\"font-size:12pt; color:#000000; font-family:Calibri,Helvetica,sans-serif\">\r\n<div class=\"rps_ff31\">\r\n<div dir=\"ltr\">\r\n<div id=\"x_divtagdefaultwrapper\" dir=\"ltr\" style=\"font-size:12pt; color:rgb(0,0,0); font-family:Calibri,Helvetica,sans-serif,&quot;EmojiFont&quot;,&quot;Apple Color Emoji&quot;,&quot;Segoe UI Emoji&quot;,NotoColorEmoji,&quot;Segoe UI Symbol&quot;,&quot;Android Emoji&quot;,EmojiSymbols\">\r\n<span>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</span>\r\n<div></div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</body>\r\n</html>\r\n"
+          },
+          "start": {
+            "dateTime": "2018-11-22T14:45:00.0000000",
+            "timeZone": "UTC"
+          },
+          "end": {
+            "dateTime": "2018-11-22T16:15:00.0000000",
+            "timeZone": "UTC"
+          },
+          "location": {
+            "displayName": "London",
+            "locationUri": "https://www.bingapis.com/api/v6/localentities/8e0ba7b6-4225-fa8a-6369-1b5294e602a5",
+            "locationType": "postalAddress",
+            "uniqueId": "b83fad8a-6aae-491e-a896-3a4c906afd15",
+            "uniqueIdType": "locationStore",
+            "address": {
+              "street": "",
+              "city": "London",
+              "state": "England",
+              "countryOrRegion": "United Kingdom",
+              "postalCode": ""
+            },
+            "coordinates": {
+              "latitude": 51.5064,
+              "longitude": -0.1272
+            },
+            "link": "https://www.google.com/maps/search/?api=1&query=51.5064,-0.1272"
+          },
+          "attendees": [
+            {
+              "type": "required",
+              "status": {
+                "response": "none",
+                "time": "0001-01-01T00:00:00Z"
+              },
+              "emailAddress": {
+                "name": "Marketing",
+                "address": "Marketing@ToasterGroup.onmicrosoft.com"
+              }
+            },
+            {
+              "type": "required",
+              "status": {
+                "response": "none",
+                "time": "0001-01-01T00:00:00Z"
+              },
+              "emailAddress": {
+                "name": "lookup test",
+                "address": "lookup@ToasterGroup.onmicrosoft.com"
+              }
+            }
+          ],
+          "organizer": {
+            "emailAddress": {
+              "name": "James Cook",
+              "address": "james@ToasterGroup.onmicrosoft.com"
+            },
+            "photo": "data:image/jpeg;base64,77+977+977+977+9ABBKRklGAAEBAQBgAGAAAO+/ve+/vQBDAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQHvv73vv70AQwEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEB77+977+9ABEIADAAMAMBIgACEQEDEQHvv73vv70AHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL77+977+9AO+/vRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDLvv73vv73vv70II0Lvv73vv70VUu+/ve+/vSQzYnLvv70JChYXGBkaJSYnKCkqNDU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl677+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+9AB8BAAMBAQEBAQEBAQEAAAAAAAABAgMEBQYHCAkKC++/ve+/vQDvv70RAAIBAgQEAwQHBQQEAAECdwABAgMRBAUhMQYSQVEHYXETIjLvv70IFELvv73vv73vv73vv70JIzNS77+9FWJy77+9ChYkNO+/vSXvv70XGBkaJicoKSo1Njc4OTpDREVGR0hJSlNUVVZXWFlaY2RlZmdoaWpzdHV2d3h5eu+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/vQAMAwEAAhEDEQA/AO+/ve+/vSjvv73vv73vv70Y77+9F++/vVfvv73vv71P77+9WH/vv73vv73vv73vv73vv71i77+977+977+9O24tdO+/ve+/ve+/vXxg77+977+9RFfvv70EHGDvv71ALXTvv71577+977+977+9O3gL77+977+977+977+9N++/vVfvv73vv73vv71udu+/vWnvv70l77+9Xe+/ve+/ve+/vREV77+9zLNb77+977+9zYPvv71b77+977+977+9Tjzvv71XIzR8I++/vULvv70977+9Ze+/vRpX77+9NQ0HUO+/vXXvv73vv70tdu+/vStre++/vdyFSCHvv73vv73vv73vv73vv71Z77+9Y++/vTjvv70l77+977+9bEcW77+9GVDvv71t77+9JO+/ve+/vWlkee+/ve+/ve+/vWnvv73vv73vv73vv7000rHvv71Z77+9du+/vTzvv73vv70z77+977+9SzMxYkk077+9AQQe77+977+9PyI5B9COQe+/vXNB77+9Iu+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/vRbvv73vv71rfw08He+/veqSve+/ve+/vcaPEk9xIe+/vSXvv73Zpe+/ve+/vSnvv71u77+9LO+/ve+/vRzvv73vv73vv715He+/ve+/vUk177+977+9GT0077+9Fe+/vT8ZI++/vQzvv70NfFUX77+9I++/ve+/vVXvv73vv700EVkrPe+/vS11AO+/vRLvv700VnklfTvvv70p5aKZHQvvv71g77+9VFfvv71RQB/vv73vv73vv73vv73vv70u77+9CCpX77+977+9HkEEYO+/vQEEYO+/vUE477+977+9ByTvv73vv73vv73vv70Y77+9LQfvv70+Iu+/ve+/vUrvv73vv71JZ3Mya1bvv70U77+977+977+9WTJd77+9Ru+/vTvvv73vv70zTRxuDhoRESA277+9XO+/vQDvv73vv701H++/vTxl77+977+9DU0/2a3vv71dRSLvv73vv70pZhbvv71FLe+/ve+/vUY/77+977+977+977+9QRE4VO+/vUV277+9VO+/vR0X77+977+977+9P++/ve+/vT4g77+977+9Ze+/vUXvv70I77+977+9K3t977+977+9Fe+/vWYp77+9QiYjYjzvv71V77+9OAzvv73vv73vv70JFDHvv70w77+977+977+9ce+/vUcaRRpFGu+/ve+/vTRY77+9ReioihVUeyrvv70H77+977+977+9YO+/ve+/ve+/vWvvv73vv70w77+9z4Pvv73vv73vv73vv71177+9LSYH77+9IRcSZu+/veWXqlpaRh7vv73vv73vv71GVu+/vRkK77+9Fu+/vTnvv73vv73vv71f77+9Vlvvv73vv73vv73vv73vv70U77+9D8qu77+977+9AO+/vVvvv70Eb++/vdKt77+977+9TO+/vThkN1c277+9PnhI77+914jvv71rXWta77+977+977+91rLvv73vv70t77+977+977+9Tybvv73vv71I77+977+977+9Te+/vVjvv73vv73vv71kSO+/vX8y77+9RCTvv71PLNyZCx8s77+977+91b/vv70X77+977+9AO+/vQ3vv73vv70AGu+/ve+/vUFbW++/vTxJ77+9XW/vv73avca777+9G++/vX/vv71dLHHvv70/77+9DAjvv71CCu+/vQQwQO+/vRRQwqTvv71A77+977+9We+/vdyWNXRtY1Pvv73vv73vv71l77+9aO+/vW9h77+977+977+9ee+/vXdx77+9bu+/vUhR77+9b++/vcySRSJJFO+/vUUkciPvv73vv73vv71g77+9f++/vTVv77+9Be+/vT/vv70Dc++/vQDGqO+/ve+/vdW/77+9F++/ve+/vQDvv70N77+977+9ABrvv73vv73vv70vB++/ve+/vXcRCO+/vXxz77+9C++/vRtR77+977+9D++/vSUgDBkuNO+/ve+/vQIzE++/ve+/vWl477+977+977+9Xu+/ve+/ve+/ve+/vXwj77+9e3bvv73vv73Ot2nvv700aO+/vXFoC0Hvv71aA++/ve+/ve+/vWFw77+9Xe+/vQMQ77+9Y0Xvv70zcO+/vTjvv70/77+977+9AO+/vRrvv73vv70C77+9H++/vQHvv73vv70A77+9Ve+/vXw977+9XtK8ee+/ve+/ve+/vVsdWgkj77+9Pu+/vRTvv70N77+977+9TS3vv73OqWtve2rssYLvv71dWu+/vSwzRO+/vUdHO++/ve+/vTAQ77+977+9P++/ve+/ve+/vQ=="
+          },
+          "date": "2018-11-22T14:45:00.000Z",
+          "duration": "1h 30m ",
+          "time": "14:45",
+          "date_readable": "11/22/18",
+          "showDetails": false
+        },
+        {
+          "@odata.etag": "W/\"IbXQQXRjrEGHveA90TX5AQADnj+oxA==\"",
+          "id": "AAMkADJlMTQ1MjAwLTcyMWItNDkzYS1iYzYyLWYyM2M5ZmNiZDYyMwBGAAAAAACVawIxJltTS5JfPy1OVLjdBwAhtdBBdGOsQYe94D3RNfkBAAAAAAENAAAhtdBBdGOsQYe94D3RNfkBAAOdTvi0AAA=",
+          "createdDateTime": "2018-11-21T15:31:52.8653849Z",
+          "lastModifiedDateTime": "2018-11-23T07:51:42.8215879Z",
+          "reminderMinutesBeforeStart": 15,
+          "isReminderOn": true,
+          "subject": "MSGraph Event Invitation",
+          "bodyPreview": "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+          "isCancelled": false,
+          "responseRequested": true,
+          "webLink": "https://outlook.office365.com/owa/?itemid=AAMkADJlMTQ1MjAwLTcyMWItNDkzYS1iYzYyLWYyM2M5ZmNiZDYyMwBGAAAAAACVawIxJltTS5JfPy1OVLjdBwAhtdBBdGOsQYe94D3RNfkBAAAAAAENAAAhtdBBdGOsQYe94D3RNfkBAAOdTvi0AAA%3D&exvsurl=1&path=/calendar/item",
+          "onlineMeetingUrl": null,
+          "responseStatus": {
+            "response": "accepted",
+            "time": "2018-11-21T16:29:58.4534629Z"
+          },
+          "body": {
+            "contentType": "html",
+            "content": "<html>\r\n<head>\r\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\r\n<meta content=\"text/html; charset=us-ascii\">\r\n<style type=\"text/css\" style=\"display:none\">\r\n<!--\r\np\r\n\t{margin-top:0;\r\n\tmargin-bottom:0}\r\n-->\r\n</style>\r\n</head>\r\n<body dir=\"ltr\">\r\n<div id=\"divtagdefaultwrapper\" dir=\"ltr\" style=\"font-size:12pt; color:#000000; font-family:Calibri,Helvetica,sans-serif\">\r\n<div class=\"rps_5f36\">\r\n<div>\r\n<div dir=\"ltr\">\r\n<div id=\"x_divtagdefaultwrapper\" dir=\"ltr\" style=\"font-size:12pt; color:rgb(0,0,0); font-family:Calibri,Helvetica,sans-serif,&quot;EmojiFont&quot;,&quot;Apple Color Emoji&quot;,&quot;Segoe UI Emoji&quot;,NotoColorEmoji,&quot;Segoe UI Symbol&quot;,&quot;Android Emoji&quot;,EmojiSymbols\">\r\n<p style=\"margin-top:0; margin-bottom:0\"><span>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</span></p>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</body>\r\n</html>\r\n"
+          },
+          "start": {
+            "dateTime": "2018-11-29T13:00:00.0000000",
+            "timeZone": "UTC"
+          },
+          "end": {
+            "dateTime": "2018-11-29T14:30:00.0000000",
+            "timeZone": "UTC"
+          },
+          "location": {
+            "displayName": "Paris",
+            "locationUri": "https://www.bingapis.com/api/v6/localbusinesses/YN1068x226556045",
+            "locationType": "localBusiness",
+            "uniqueId": "84f6bce9-5266-4fe2-97c4-daf0599cbf91",
+            "uniqueIdType": "locationStore",
+            "address": {
+              "street": "3-4 The Galleria Intu Metrocentre",
+              "city": "Gateshead",
+              "state": "Tyne And Wear",
+              "countryOrRegion": "United Kingdom",
+              "postalCode": ""
+            },
+            "coordinates": {
+              "latitude": 54.9576,
+              "longitude": -1.66857
+            },
+            "link": "https://www.google.com/maps/search/?api=1&query=54.9576,-1.66857"
+          },
+          "attendees": [
+            {
+              "type": "required",
+              "status": {
+                "response": "none",
+                "time": "0001-01-01T00:00:00Z"
+              },
+              "emailAddress": {
+                "name": "Martin Amm",
+                "address": "admin@ToasterGroup.onmicrosoft.com"
+              }
+            },
+            {
+              "type": "required",
+              "status": {
+                "response": "accepted",
+                "time": "0001-01-01T00:00:00Z"
+              },
+              "emailAddress": {
+                "name": "James Cook",
+                "address": "james@ToasterGroup.onmicrosoft.com"
+              }
+            }
+          ],
+          "organizer": {
+            "emailAddress": {
+              "name": "Martin Amm",
+              "address": "admin@ToasterGroup.onmicrosoft.com"
+            },
+            "photo": null
+          },
+          "date": "2018-11-29T13:00:00.000Z",
+          "duration": "1h 30m ",
+          "time": "13:00",
+          "date_readable": "11/29/18",
+          "showDetails": false
+        }
+      ],
+      "_settings": {}
+    }
+  preview-mode: live
+  preview-container: event
+  search-term: 
+  service-url: 
+  xclass: 
+  xstyle: 
+  code: |-
+    action.initialize = function(evt) {
+
+    }
+
+    action.post1 = function(state) {
+    	state.model.items[state.args.index-1].showDetails = !state.model.items[state.args.index-1].showDetails;
+    }
