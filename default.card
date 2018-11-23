@@ -26,10 +26,17 @@ properties:
           	<div class="bold font-caption">{{ item.date_readable }}</div>
         	</div>
         	<div class="layout-flex text-primary">
-        		<div class="font-bold">
-        			{{ item.subject }}<span class="font-caption grey mlsm">{{ item.duration }}</span>
+        		<div class="layout-horizontal layout-center">
+          		{% if item.organizer.photo %}
+        			<iron-image class="mrsm" src="{{ item.organizer.photo }}" style="border-radius:50%;width:36px; height:36px;" sizing="cover" preload></iron-image>
+        			{% endif %}
+        			<div class="layout-vertical">
+                <div class="font-bold">
+                  {{ item.subject }}<span class="font-caption grey mlsm">{{ item.duration }}</span>
+                </div>
+                <div>{{ item.organizer.emailAddress.name }} (host)</div>
+        			</div>
         		</div>
-          	<div>{{ item.organizer.emailAddress.name }} (host)</div>
         		<div class="layout-vertical mt mbsm">
         			<div class="layout-horizontal layout-center layout-justified {%if item.showDetails == true %}mb{% endif %}">
         				{% if item.onlineMeetingUrl %}
@@ -50,11 +57,26 @@ properties:
         			{% if item.showDetails == true %}
               {% if item.location %}
               <div class="layout-horizontal layout-center mb">
-                <at-carbon-icon icon="now:marker" class="mrsm" style="width:16px;height:16px;"></at-carbon-icon>
+                <at-carbon-icon icon="now:marker" class="green mrsm" style="width:16px;height:16px;"></at-carbon-icon>
                 <at-link href="{{ item.location.link }}" class="blue">{{ item.location.displayName }}</at-link>
               </div>
               {% endif %}
               <div class="mb">Attendees ({{ item.attendees.length }})</div>
+          		<div class="layout-horizontal">
+        				{% assign overflow = 0 %}
+        				{% assign skipCount = true %}
+                {% for attendee in item.attendees %}
+                	{% if attendee.photo and forloop.index < 9 %}
+        						{% assign skipCount = false %}
+                		<iron-image class="mbsm mrsm" src="{{ attendee.photo }}" style="border-radius:50%;width:24px;height:24px;" sizing="cover" preload></iron-image>
+      						{% else %}
+      							{% assign overflow = overflow | plus: 1 %}
+                	{% endif %}
+                {% endfor %}
+      					{% if overflow > 0 and skipCount == false %}
+      						<div class="green" style="border-radius:50%;width:24px;height:24px;">+{{ overflow }}</div>
+        				{% endif %}
+        			</div>
               <at-carbon-clamp lines="4" class="mb mr">{{ item.bodyPreview }}</at-carbon-clamp>
               {% if item.responseRequested and item.responseStatus.response != "organizer" %}
               <div class="layout-horizontal layout-center mb">
@@ -159,7 +181,8 @@ $meta:
               "emailAddress": {
                 "name": "Marketing",
                 "address": "Marketing@ToasterGroup.onmicrosoft.com"
-              }
+              },
+              "photo": null
             },
             {
               "type": "required",
@@ -170,7 +193,8 @@ $meta:
               "emailAddress": {
                 "name": "lookup test",
                 "address": "lookup@ToasterGroup.onmicrosoft.com"
-              }
+              },
+              "photo": null
             }
           ],
           "organizer": {
@@ -178,7 +202,7 @@ $meta:
               "name": "James Cook",
               "address": "james@ToasterGroup.onmicrosoft.com"
             },
-            "photo": "data:image/jpeg;base64,77+977+977+977+9ABBKRklGAAEBAQBgAGAAAO+/ve+/vQBDAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQHvv73vv70AQwEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEB77+977+9ABEIADAAMAMBIgACEQEDEQHvv73vv70AHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL77+977+9AO+/vRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDLvv73vv73vv70II0Lvv73vv70VUu+/ve+/vSQzYnLvv70JChYXGBkaJSYnKCkqNDU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl677+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+977+9AB8BAAMBAQEBAQEBAQEAAAAAAAABAgMEBQYHCAkKC++/ve+/vQDvv70RAAIBAgQEAwQHBQQEAAECdwABAgMRBAUhMQYSQVEHYXETIjLvv70IFELvv73vv73vv73vv70JIzNS77+9FWJy77+9ChYkNO+/vSXvv70XGBkaJicoKSo1Njc4OTpDREVGR0hJSlNUVVZXWFlaY2RlZmdoaWpzdHV2d3h5eu+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/vQAMAwEAAhEDEQA/AO+/ve+/vSjvv73vv73vv70Y77+9F++/vVfvv73vv71P77+9WH/vv73vv73vv73vv73vv71i77+977+977+9O24tdO+/ve+/ve+/vXxg77+977+9RFfvv70EHGDvv71ALXTvv71577+977+977+9O3gL77+977+977+977+9N++/vVfvv73vv73vv71udu+/vWnvv70l77+9Xe+/ve+/ve+/vREV77+9zLNb77+977+9zYPvv71b77+977+977+9Tjzvv71XIzR8I++/vULvv70977+9Ze+/vRpX77+9NQ0HUO+/vXXvv73vv70tdu+/vStre++/vdyFSCHvv73vv73vv73vv73vv71Z77+9Y++/vTjvv70l77+977+9bEcW77+9GVDvv71t77+9JO+/ve+/vWlkee+/ve+/ve+/vWnvv73vv73vv73vv7000rHvv71Z77+9du+/vTzvv73vv70z77+977+9SzMxYkk077+9AQQe77+977+9PyI5B9COQe+/vXNB77+9Iu+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/vRbvv73vv71rfw08He+/veqSve+/ve+/vcaPEk9xIe+/vSXvv73Zpe+/ve+/vSnvv71u77+9LO+/ve+/vRzvv73vv73vv715He+/ve+/vUk177+977+9GT0077+9Fe+/vT8ZI++/vQzvv70NfFUX77+9I++/ve+/vVXvv73vv700EVkrPe+/vS11AO+/vRLvv700VnklfTvvv70p5aKZHQvvv71g77+9VFfvv71RQB/vv73vv73vv73vv73vv70u77+9CCpX77+977+9HkEEYO+/vQEEYO+/vUE477+977+9ByTvv73vv73vv73vv70Y77+9LQfvv70+Iu+/ve+/vUrvv73vv71JZ3Mya1bvv70U77+977+977+9WTJd77+9Ru+/vTvvv73vv70zTRxuDhoRESA277+9XO+/vQDvv73vv701H++/vTxl77+977+9DU0/2a3vv71dRSLvv73vv70pZhbvv71FLe+/ve+/vUY/77+977+977+977+9QRE4VO+/vUV277+9VO+/vR0X77+977+977+9P++/ve+/vT4g77+977+9Ze+/vUXvv70I77+977+9K3t977+977+9Fe+/vWYp77+9QiYjYjzvv71V77+9OAzvv73vv73vv70JFDHvv70w77+977+977+9ce+/vUcaRRpFGu+/ve+/vTRY77+9ReioihVUeyrvv70H77+977+977+9YO+/ve+/ve+/vWvvv73vv70w77+9z4Pvv73vv73vv73vv71177+9LSYH77+9IRcSZu+/veWXqlpaRh7vv73vv73vv71GVu+/vRkK77+9Fu+/vTnvv73vv73vv71f77+9Vlvvv73vv73vv73vv73vv70U77+9D8qu77+977+9AO+/vVvvv70Eb++/vdKt77+977+9TO+/vThkN1c277+9PnhI77+914jvv71rXWta77+977+977+91rLvv73vv70t77+977+977+9Tybvv73vv71I77+977+977+9Te+/vVjvv73vv73vv71kSO+/vX8y77+9RCTvv71PLNyZCx8s77+977+91b/vv70X77+977+9AO+/vQ3vv73vv70AGu+/ve+/vUFbW++/vTxJ77+9XW/vv73avca777+9G++/vX/vv71dLHHvv70/77+9DAjvv71CCu+/vQQwQO+/vRRQwqTvv71A77+977+9We+/vdyWNXRtY1Pvv73vv73vv71l77+9aO+/vW9h77+977+977+9ee+/vXdx77+9bu+/vUhR77+9b++/vcySRSJJFO+/vUUkciPvv73vv73vv71g77+9f++/vTVv77+9Be+/vT/vv70Dc++/vQDGqO+/ve+/vdW/77+9F++/ve+/vQDvv70N77+977+9ABrvv73vv73vv70vB++/ve+/vXcRCO+/vXxz77+9C++/vRtR77+977+9D++/vSUgDBkuNO+/ve+/vQIzE++/ve+/vWl477+977+977+9Xu+/ve+/ve+/ve+/vXwj77+9e3bvv73vv73Ot2nvv700aO+/vXFoC0Hvv71aA++/ve+/ve+/vWFw77+9Xe+/vQMQ77+9Y0Xvv70zcO+/vTjvv70/77+977+9AO+/vRrvv73vv70C77+9H++/vQHvv73vv70A77+9Ve+/vXw977+9XtK8ee+/ve+/ve+/vVsdWgkj77+9Pu+/vRTvv70N77+977+9TS3vv73OqWtve2rssYLvv71dWu+/vSwzRO+/vUdHO++/ve+/vTAQ77+977+9P++/ve+/ve+/vQ=="
+            "photo": "data:image/jpeg;base64,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"
           },
           "date": "2018-11-22T14:45:00.000Z",
           "duration": "1h 30m ",
@@ -244,7 +268,8 @@ $meta:
               "emailAddress": {
                 "name": "Martin Amm",
                 "address": "admin@ToasterGroup.onmicrosoft.com"
-              }
+              },
+              "photo": null
             },
             {
               "type": "required",
@@ -255,7 +280,8 @@ $meta:
               "emailAddress": {
                 "name": "James Cook",
                 "address": "james@ToasterGroup.onmicrosoft.com"
-              }
+              },
+              "photo": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/2wBDAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/wAARCAAwADADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD+/iiiub8Y6heaV4S8T6pYf8f2neH9YvbQ4ztuLXT7iaF8YIOyRFfBBBxg8UAtdO55942+O3gLwPfy6TeXV5q2sW523WnaJbpdvZvgERXlzLNb2dvNg/Nbm4a5TjzIVyM0fCP7Qvw98WX8GlfaNQ0HULp1itItdtora3up3IVIIb63uLq0WeRjtjjuJYGlbEcW+RlQ/m2ZJJWaaWR5ppnaaaaRi8s00rGSWaV2yzySuzPI7EszMWJJNNIBBB6H6j8iOQfQjkHkc0GvIvP+v6/E/ZmivOPhFquoa38NPB2p6pK9xf3GjxJPcSHdJcfZpZbSKeVuryzQwRyyucl5HZiSSTXo9Bk9NOwV5j8ZI/EMvw18VReGI7mXVZLGNBFZKz3kli11ANUS1jRWeSV9O+0p5aKZHQusYMhUV6dRQB+M+Nvy4I2/LtIIKleCpB5BBGCCAQRg80E45PAHJJ7V6d8Y/C0HhD4i+IdKtJBJZ3Mya1aKFKm2h1kyXZtGyTu+zTNNHG4OGhERIDbhXP8AgLw1H4w8ZeHfDU0/2a31XUUiupgpZhaQRS3l0kY/56zW9tJBEThUkkV2+VSCHRfS598/s7w+ILf4ZaZF4giu4St7ff2NFexmKdNCJiNiPKdVkjgMhuTaCRQxtTC6/u2jr3GmRxpFGkUahI40WONF6KiKFVR7KoAHsKfQYN3dzmvE3jDwz4OsxfeJdZstJgfcIRcSZuLll6paWkYe6unGRlbeGQrkFsA5r5e8X/tWW6CW18DaFJcPyq6x4gDQW68Eb7fSreT7TNg4ZDdXNp0+eEjK14j8a11rWvid4ovWstTuLeOeztdPJtbqSKKxg02yWJLb5GRIpn8y6YREJJNPLNyZCx8s/sjVv+gXqP8A4A3P/wAaoNFBW1uXPEniXW/F2r3Gu+Ib03+qXSxxyT+TDAixQgrDBDBAiRRQwqSEQKTyWdncljV0bWNT8P6pZa1o129hqenTefZ3caxu0UhR4m/dzJJFIkkUkkUkciOjxuykYNN/sjVv+gXqP/gDc/8Axqj+yNW/6Beo/wDgDc//ABqgs+svB/7VdxEIrXxzoQuFG1G1nw/hJSAMGS40m5kCMxOCzWl4o67LXoK+pvCfj3wj43t2uPDOt2mpNGivcWgLQahaA4H+lWFwsV3CAxCeY0XlM3CSOME/lP8A2Rq3/QL1H/wBuf8A41XYfD2DXtK8eeDb+1sdWgkj8T6FFK8NtdxNLZ3OqWtve2rssYLQXVrJLDNE2UdHO5SQMBDgnto/wP/Z"
             }
           ],
           "organizer": {
