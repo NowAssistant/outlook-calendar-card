@@ -17,8 +17,13 @@ properties:
     view: |-
       <div class="layout-vertical">
         <div class="font-headline layout-horizontal bb pb">
-        	<at-carbon-moment class="ml" format="LLLL"></at-carbon-moment>
+        	<at-carbon-moment class="ml" format="dddd, LL"></at-carbon-moment>
         </div>
+        {% if items.length < 1 %}
+        <div class="layout-vertical layout-center-center font-headline green mlg" style="text-align:center;">
+        	You have no upcoming events today.
+        </div>
+        {% else %}
         {% for item in items %}
         {% if forloop.index > 1 %}
         	<div class="expanded-only bb"></div>
@@ -98,6 +103,7 @@ properties:
         	</div>
         </div>
         {% endfor %}
+        {% endif %}
       </div>
 
       <style>
@@ -120,6 +126,7 @@ properties:
     xgridcols: 12
     expandable: !!bool true
     href: http://localhost
+    modelBind: 'expandable: items.length>1'
 $meta:
   cardId: !!int 63
   preview-data: |-
